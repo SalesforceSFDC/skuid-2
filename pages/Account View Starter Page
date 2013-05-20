@@ -58,9 +58,6 @@
             <field id="TotalOpportunityQuantity"/>
             <field id="StageName"/>
             <field id="Name"/>
-            <field id="Close_Date_Time__c"/>
-            <field id="Alliance_Partner__c"/>
-            <field id="Alliance_Partner__r.Name"/>
          </fields>
          <conditions>
             <condition type="param" value="Id" field="AccountId" operator="=" enclosevalueinquotes="true"/>
@@ -86,7 +83,6 @@
             <field id="WhoId"/>
             <field id="WhatId"/>
             <field id="Type"/>
-            <field id="Type__c"/>
             <field id="ActivityDate"/>
          </fields>
          <conditions>
@@ -107,8 +103,8 @@
          </fields>
          <conditions>
             <condition type="userinfo" value="" field="RunAsUserId" operator="=" enclosevalueinquotes="true" userinfotype="userid"/>
-            <condition type="fieldvalue" value="true" enclosevalueinquotes="false" field="IsActive"/>
             <condition type="fieldvalue" value="EmailToSalesforce" enclosevalueinquotes="true" field="Function.FunctionName"/>
+            <condition type="fieldvalue" value="true" enclosevalueinquotes="false" field="IsActive"/>
          </conditions>
       </model>
       <model id="OpenTasks" limit="100" query="true" createrowifnonefound="false" orderby="LastModifiedDate DESC" sobject="Task">
@@ -151,7 +147,6 @@
          <fields>
             <field id="AccountId"/>
             <field id="Account.Name"/>
-            <field id="Close_Date_Time__c"/>
             <field id="Name"/>
          </fields>
          <conditions>
@@ -168,19 +163,20 @@
             <template>{{Model.Label}}</template>
          </subtitle>
          <actions>
-            <action type="clone"/>
-            <action type="share"/>
-            <action type="delete"/>
-            <action type="savecancel" label="New Action">
+            <action type="clone" label="New Action"/>
+            <action type="share" label="New Action"/>
+            <action type="clone" label="New Action"/>
+            <action type="delete" label="New Action"/>
+            <action type="savecancel" label="New Action" afterSave=" ">
                <models>
                   <model>Contact</model>
                   <model>Opportunities</model>
                   <model>Cases</model>
+                  <model>TaskHistory</model>
                   <model>EmailtoSF</model>
                   <model>OpenTasks</model>
-                  <model>TaskHistory</model>
                   <model>AccountContactEvents</model>
-                  <model>AccountOpportunityEvents</model>
+                  <model>OpportunityEvents</model>
                </models>
             </action>
          </actions>
@@ -189,7 +185,7 @@
          <tabs>
             <tab name="Profile" icon="ui-silk-building">
                <components>
-                  <basicfieldeditor showsavecancel="true" showheader="true" model="AccountData" mode="read">
+                  <basicfieldeditor showsavecancel="false" showheader="true" model="AccountData" mode="read">
                      <columns>
                         <column width="50%">
                            <sections>
@@ -264,14 +260,14 @@
             </tab>
             <tab name="Contacts" icon="ui-silk-group">
                <components>
-                  <skootable showconditions="true" showsavecancel="true" searchmethod="server" searchbox="true" showexportbuttons="false" pagesize="10" createrecords="false" model="Contact" mode="read">
+                  <skootable showconditions="true" showsavecancel="false" searchmethod="server" searchbox="true" showexportbuttons="false" pagesize="10" createrecords="false" model="Contact" mode="read">
                      <fields>
                         <field id="FirstName"/>
                         <field id="LastName"/>
                         <field id="Title"/>
                         <field type="COMBO" allowhtml="true">
                            <label>Email</label>
-                           <template>{{#Email}}{{Email}} [&lt;a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;tf=1&amp;to={{{Email}}}&amp;bcc=emailtosalesforce@{{#$Model.EmailToSF.data}}{{EmailDomainName}}{{/$Model.EmailToSF.data}}&amp;shva=1" target="ComposeGmail"&gt;&lt;img src="/img/google/gmail_M_icon.gif" alt=""/&gt; Gmail&lt;/a&gt;]{{/Email}}</template>
+                           <template>{{#Email}}{{Email}} [&lt;a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;tf=1&amp;to={{{Email}}}&amp;bcc=emailtosalesforce@{{#$Model.EmailtoSF.data}}{{EmailDomainName}}{{/$Model.EmailtoSF.data}}&amp;shva=1" target="ComposeGmail"&gt;&lt;img src="/img/google/gmail_M_icon.gif" alt=""/&gt; Gmail&lt;/a&gt;]{{/Email}}</template>
                         </field>
                         <field id="Phone"/>
                      </fields>
@@ -290,7 +286,7 @@
                         <view type="standard"/>
                      </views>
                      <actions defaultlabel="Global Actions" defaulticon="ui-silk-wand" usefirstitemasdefault="true">
-                        <action type="redirect" label="New {{Model.Label}}" url="/{{Model.KeyPrefix}}/e?retURL=%2F{{Id}}&amp;accid={{Id}}" icon="ui-silk-user-add"/>
+                        <action type="redirect" label="New {{Model.Label}}" url="/{{Model.KeyPrefix}}/e?retURL=%2F{{$Param.id}}&amp;accid={{$Param.id}}" icon="ui-silk-user-add"/>
                         <action type="redirect" label="Merge Contacts" url="/merge/conmergewizard.jsp?retURL=%2F{{Id}}i&amp;id={{Id}}" icon="ui-silk-arrow-merge"/>
                      </actions>
                      <filters>
@@ -319,7 +315,7 @@
             </tab>
             <tab name="Opportunities" icon="ui-silk-coins">
                <components>
-                  <skootable showconditions="true" showsavecancel="true" searchmethod="server" searchbox="true" showexportbuttons="false" pagesize="10" createrecords="true" model="Opportunities" mode="read">
+                  <skootable showconditions="true" showsavecancel="false" searchmethod="server" searchbox="true" showexportbuttons="false" pagesize="10" createrecords="true" model="Opportunities" mode="read">
                      <fields>
                         <field id="Name"/>
                         <field id="Amount"/>
@@ -382,7 +378,6 @@
                                        <template>{{WhoId}}, {{WhatId}}</template>
                                     </field>
                                     <field id="Type"/>
-                                    <field id="Type__c"/>
                                     <field id="ActivityDate"/>
                                  </fields>
                                  <rowactions>
@@ -407,7 +402,6 @@
 {{Description}}
 </eventsource>
                                     <eventsource name="Tasks" model="OpenTasks" color="lightgreen" namefield="Subject" startfield="ReminderDateTime" endfield="ReminderDateTime" groupfield="OwnerId">Reminder: {{Subject}}</eventsource>
-                                    <eventsource name="Opportunities" model="OpportunityEvents" namefield="Name" startfield="Close_Date_Time__c" endfield="Close_Date_Time__c" color="orange">{{Name}} Opportunity Closes</eventsource>
                                  </sources>
                                  <views>
                                     <eventview type="month"/>
@@ -423,7 +417,7 @@
             </tab>
             <tab name="Cases" icon="ui-silk-bug">
                <components>
-                  <skootable showconditions="true" showsavecancel="true" searchmethod="server" searchbox="true" showexportbuttons="false" pagesize="10" createrecords="true" model="Cases" mode="read">
+                  <skootable showconditions="true" showsavecancel="false" searchmethod="server" searchbox="true" showexportbuttons="false" pagesize="10" createrecords="true" model="Cases" mode="read">
                      <fields>
                         <field id="ContactId">
                            <label>Contact</label>
@@ -454,6 +448,7 @@
                   <social model="AccountData"/>
                </components>
             </tab>
+         </tabs>
       </tabset>
    </components>
    <resources>
