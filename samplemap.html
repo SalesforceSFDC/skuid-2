@@ -6,14 +6,14 @@ title: Simple Map Component
 Simple Map Component
 =================
 
-The following is a modified version of the Custom Map component that we built during our Dreamforce 2012 session "Unleash the Force.com User Interface with Skuid".
+The following is a modified version of the Map component that we built during our Dreamforce 2012 session "Unleash the Force.com User Interface with Skuid".
 
 However, we have modified the code shown in the demo for compatibility with the Spring 13 release of Skuid.
 
-There are only 2 files you need to create to add this Custom Map component to your Skuid org, such that it can be used in ANY Skuid Page:
+There are only 2 files you need to create to add this 'Awesome Map' component to your Skuid org, such that it can be used in ANY Skuid Page:
 
-+	**MapsBuildersJS**.resource (Static Resource - JavaScript)
-+	**MapsJS**.resource (Static Resource - JavaScript)
++  **MapsBuildersJS**.resource (Static Resource - JavaScript)
++  **MapsJS**.resource (Static Resource - JavaScript)
 
 The only other step is to add a 'Maps' entry to the Skuid Page object's Module field. For an explanation of this, see [Creating a Skuid Module](http://plusplusben.github.com/skuid/devcreatemodule.html).
 
@@ -25,108 +25,108 @@ Place the following in a **'MapsJS'** Static Resource:
 
 (function( skuid ){
     
-	var $ = skuid.$;
-	
-	// Register a new Skuid Component Type
-	skuid.componentType.register('awesomemap',function(domElement,xmlConfig){
+   var $ = skuid.$;
+   
+   // Register a new Skuid Component Type
+   skuid.componentType.register('awesomemap',function(domElement,xmlConfig){
 
-		// Establish a shorthand for the DOM element we will be building to,
-		// (actually a jQuery object wrapper around that domElement) 
-		var self = domElement;
-		
-		// Get the name of the model we want to work with from our component definition,
-		// as well as the Latitude and Longitude fields we want to work with.
-		var	modelName = xmlConfig.attr('model'),
-			latitudeField = xmlConfig.attr('latitudefield'),
-			longitudeField = xmlConfig.attr('longitudefield');
-		
-		// If we do not have ALL of the first attributes,
-		// then display an error in our domElement.
-		if (!modelName || !latitudeField || !longitudeField) {
-			self.text(
-				'Error: Map Component could not be drawn. ' 
-				+ 'A Model, Latitude Field, and Longitude Field must ALL be provided.'
-			);
-			return;
-		}
+      // Establish a shorthand for the DOM element we will be building to,
+      // (actually a jQuery object wrapper around that domElement) 
+      var self = domElement;
+      
+      // Get the name of the model we want to work with from our component definition,
+      // as well as the Latitude and Longitude fields we want to work with.
+      var   modelName = xmlConfig.attr('model'),
+         latitudeField = xmlConfig.attr('latitudefield'),
+         longitudeField = xmlConfig.attr('longitudefield');
+      
+      // If we do not have ALL of the first attributes,
+      // then display an error in our domElement.
+      if (!modelName || !latitudeField || !longitudeField) {
+         self.text(
+            'Error: Map Component could not be drawn. ' 
+            + 'A Model, Latitude Field, and Longitude Field must ALL be provided.'
+         );
+         return;
+      }
 
-		// Save our pin color to our element, for later use.
-		self.pinColor = xmlConfig.attr('pincolor') || 'green';
-		
-		// Use the Skuid JavaScript API
-		// to get a reference to the requested Model.
-		self.model = skuid.model.getModel(modelName);
-		self.latitudeField = latitudeField;
-		self.longitudeField = longitudeField;
-		
-		// Establish ourselves as a Skuid Editor on this Model.
-		// We do not want to show the typical Editor header
-		// or save/cancel buttons
-		self.editor = new skuid.ui.Editor(self,{
-			showHeader : false,
-			showSaveCancel : false
-		});
-		
-		// Register that we will be editing the specified Model.
-    	self.editor.registerModel(self.model);
-		
-		// Define the draw function,
-		// which we will use for drawing our entire 
-		self.draw = function() { 
-	    	
-	    	// Loop through the Case rows in our model
-			// and create a marker for each Case
-			self.markers = [];
-			$.each(self.model.data,function(i,row) {
-				
-				var latitude = self.model.getFieldValue(row,self.latitudeField),
-					longitude = self.model.getFieldValue(row,self.longitudeField);
-				
-				if (latitude != null && longitude != null) {
-					self.markers.push(
-						'&markers=color:' + self.pinColor 
-						+ '%7C' + latitude
-						+ ',' + longitude
-					);
-				}
-			});
-			
-			// Create a map using google static maps api,
-			// removing any existing map that we may have from prior draws
-			if (self.googlemap) self.googlemap.remove();
-			self.googlemap = $('<img>')
-				.attr('src','https://maps.googleapis.com/maps/api/staticmap?size=600x300' 
-					+ self.markers.join('') 
-					+ '&maptype=roadmap'
-					+ '&sensor=false'
-				).css('margin-top','8px')
-				.appendTo(self);
-		};
-		
+      // Save our pin color to our element, for later use.
+      self.pinColor = xmlConfig.attr('pincolor') || 'green';
+      
+      // Use the Skuid JavaScript API
+      // to get a reference to the requested Model.
+      self.model = skuid.model.getModel(modelName);
+      self.latitudeField = latitudeField;
+      self.longitudeField = longitudeField;
+      
+      // Establish ourselves as a Skuid Editor on this Model.
+      // We do not want to show the typical Editor header
+      // or save/cancel buttons
+      self.editor = new skuid.ui.Editor(self,{
+         showHeader : false,
+         showSaveCancel : false
+      });
+      
+      // Register that we will be editing the specified Model.
+      self.editor.registerModel(self.model);
+      
+      // Define the draw function,
+      // which we will use for drawing our entire 
+      self.draw = function() { 
+         
+         // Loop through the Case rows in our model
+         // and create a marker for each Case
+         self.markers = [];
+         $.each(self.model.data,function(i,row) {
+            
+            var latitude = self.model.getFieldValue(row,self.latitudeField),
+               longitude = self.model.getFieldValue(row,self.longitudeField);
+            
+            if (latitude != null && longitude != null) {
+               self.markers.push(
+                  '&markers=color:' + self.pinColor 
+                  + '%7C' + latitude
+                  + ',' + longitude
+               );
+            }
+         });
+         
+         // Create a map using google static maps api,
+         // removing any existing map that we may have from prior draws
+         if (self.googlemap) self.googlemap.remove();
+         self.googlemap = $('<img>')
+            .attr('src','https://maps.googleapis.com/maps/api/staticmap?size=600x300' 
+               + self.markers.join('') 
+               + '&maptype=roadmap'
+               + '&sensor=false'
+            ).css('margin-top','8px')
+            .appendTo(self);
+      };
+      
 
-		
+      
 
-    	// Define how we will handle successful 'saves' to our model
-    	self.editor.handleSave = function(modelHasChanged) {
-    		if (modelHasChanged) {
-    			// Redraw our Map
-        		self.draw();
-    		}
-		};
-		
-		// Define how we will handle successful 'refreshes' to our model
-    	self.editor.handleDataRefresh = function() {
-    		// Redraw our Map
-        	self.draw();
-		};
-		
-		// Make sure our Map is at least a certain height
-		self.css('min-height','300px');
-		
-		// Now, draw our map!
-		self.draw();
-		
-	});
+      // Define how we will handle successful 'saves' to our model
+      self.editor.handleSave = function(modelHasChanged) {
+         if (modelHasChanged) {
+            // Redraw our Map
+            self.draw();
+         }
+      };
+      
+      // Define how we will handle successful 'refreshes' to our model
+      self.editor.handleDataRefresh = function() {
+         // Redraw our Map
+         self.draw();
+      };
+      
+      // Make sure our Map is at least a certain height
+      self.css('min-height','300px');
+      
+      // Now, draw our map!
+      self.draw();
+      
+   });
     
 })( skuid );
 
@@ -142,61 +142,61 @@ Place the following in a **'MapsBuildersJS'** Static Resource:
 (function(skuid) {
 
 // Cache some local variables to optimize minification 
-var $ = skuid.$;	
+var $ = skuid.$;  
 
 skuid.builder.registerBuilder(new skuid.builder.Builder({
-	id : 'awesomemap',
-	name : 'Awesome Map',
-	icon : 'ui-silk-map',
-	description : 'Draws a Map based on latitude and longitude information in the data of any Object.',
-	componentRenderer: function(component) {
-		var self = component;			
-		component.header.html(component.builder.name);
-	},
-	propertiesRenderer : function (propertiesObj,component) {
-		
-		propertiesObj.setHeaderText('Map Properties');
-		
-		var propsList = [
-			{
-				id : 'model'
-				,type : 'model'
-				,label : 'Model'
-				,required : true
-				,onChange : function(value) {
-					
-				}
-			}
-			,{
-				id : 'latitudefield'
-				,type : 'field'
-				,modelprop : 'model'
-				,label : 'Latitude Field'
-				,helptext : 'The field on the selected Model which stores a row\'s Latitude'
-			}
-			,{
-				id : 'longitudefield'
-				,type : 'field'
-				,modelprop : 'model'
-				,label : 'Longitude Field'
-				,helptext : 'The field on the selected Model which stores a row\'s Longitude'
-			}
-			
-			,{
-				id : 'pincolor'
-				,type : 'string'
-				,label : 'Pin Color'
-				,helptext : '24 bit color, or one of the following: black, brown, green, purple, yellow, blue, gray, orange, red, white'
-			}
-		];
-		
-		var propsEditor = skuid.builder.buildPropsEditor(component.state,propsList);	
-		propertiesObj.body.append(propsEditor);
-		
-	},
-	defaultStateGenerator : function() {
-		return skuid.utils.makeXMLDoc('<awesomemap pincolor="green"/>');
-	}
+   id : 'awesomemap',
+   name : 'Awesome Map',
+   icon : 'ui-silk-map',
+   description : 'Draws a Map based on latitude and longitude information in the data of any Object.',
+   componentRenderer: function(component) {
+      var self = component;         
+      component.header.html(component.builder.name);
+   },
+   propertiesRenderer : function (propertiesObj,component) {
+      
+      propertiesObj.setHeaderText('Map Properties');
+      
+      var propsList = [
+         {
+            id : 'model'
+            ,type : 'model'
+            ,label : 'Model'
+            ,required : true
+            ,onChange : function(value) {
+               
+            }
+         }
+         ,{
+            id : 'latitudefield'
+            ,type : 'field'
+            ,modelprop : 'model'
+            ,label : 'Latitude Field'
+            ,helptext : 'The field on the selected Model which stores a row\'s Latitude'
+         }
+         ,{
+            id : 'longitudefield'
+            ,type : 'field'
+            ,modelprop : 'model'
+            ,label : 'Longitude Field'
+            ,helptext : 'The field on the selected Model which stores a row\'s Longitude'
+         }
+         
+         ,{
+            id : 'pincolor'
+            ,type : 'string'
+            ,label : 'Pin Color'
+            ,helptext : '24 bit color, or one of the following: black, brown, green, purple, yellow, blue, gray, orange, red, white'
+         }
+      ];
+      
+      var propsEditor = skuid.builder.buildPropsEditor(component.state,propsList);  
+      propertiesObj.body.append(propsEditor);
+      
+   },
+   defaultStateGenerator : function() {
+      return skuid.utils.makeXMLDoc('<awesomemap pincolor="green"/>');
+   }
 }));
 
 })(skuid);
