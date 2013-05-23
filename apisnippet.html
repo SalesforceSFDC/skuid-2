@@ -19,6 +19,8 @@ The following areas of Skuid allow snippets to be used to provide custom behavio
  - **Field Renderers**: while all Skuid Ui Fields have a default renderer (and some Fields even have built-in alternative renderers, e.g. you can render a Picklist as Radio Buttons - try it!), you can always use Snippets to define custom field renderer logic.
  
  - **Filter Option Sources**: a snippet can be used to populate the options of a Skuid Filter, rather than pulling the options from a Model, field metadata, or adding them manually.
+ 
+ - **Wizard Step Actions**: set a wizard step action's type to be "Custom", and you'll be able to specify a Snippet to execute when this action is clicked.
 
 ## Methods
 ##### `registerSnippet( snippetName, snippetFunction )`
@@ -41,7 +43,8 @@ The following
 // **COPY ALL OF THE FOLLOWING INTO THE BODY OF AN INLINE SNIPPET**
 
 var field = arguments[0],
-   value = arguments[1];
+   value = arguments[1],
+   $ = skuid.$;
 
 if (field.mode == 'read') {
    // For Read mode, just use the standard Integer read-mode renderer
@@ -51,7 +54,7 @@ if (field.mode == 'read') {
    // with step size 1 and boundary range [0,10].
    // Whenever this slider is updated,
    // the data row in context will be updated as well.
-   var slider = $j('<div>').slider({
+   var slider = $('<div>').slider({
       value:value || 0,
       min: 0,
       max: 10,
