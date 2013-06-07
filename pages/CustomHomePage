@@ -65,7 +65,7 @@
             <condition type="fieldvalue" value="" enclosevalueinquotes="true" field="Status" state="filterableoff" inactive="true" name="Status"/>
          </conditions>
       </model>
-      <model id="Tasks" limit="10" query="true" createrowifnonefound="false" orderby="ActivityDate DESC" sobject="Task">
+      <model id="Tasks" limit="10" query="true" createrowifnonefound="false" orderby="ActivityDate ASC" sobject="Task">
          <fields>
             <field id="ActivityDate"/>
             <field id="CreatedDate"/>
@@ -80,12 +80,14 @@
             <field id="Account.Name"/>
             <field id="WhatId"/>
             <field id="What.Name"/>
+            <field id="Priority"/>
          </fields>
          <conditions>
             <condition type="userinfo" value="" field="OwnerId" operator="=" enclosevalueinquotes="true" userinfotype="userid"/>
             <condition type="fieldvalue" value="" enclosevalueinquotes="true" field="Status" state="filterableoff" inactive="true" name="Status"/>
             <condition type="fieldvalue" value="false" enclosevalueinquotes="false" field="IsClosed"/>
             <condition type="fieldvalue" value="Completed" enclosevalueinquotes="true" field="Status" operator="!="/>
+            <condition type="fieldvalue" value="" enclosevalueinquotes="true" field="Priority" state="filterableoff" inactive="true" name="Priority"/>
          </conditions>
       </model>
    </models>
@@ -222,6 +224,7 @@
                            <label>Opportunity/Account</label>
                         </field>
                         <field id="Status"/>
+                        <field id="Priority"/>
                         <field id="ActivityDate">
                            <label>Due Date</label>
                         </field>
@@ -238,6 +241,11 @@
                         <view type="standard"/>
                      </views>
                      <filters>
+                        <filter type="select" filteroffoptionlabel="Any Priority" createfilteroffoption="true" condition="Priority">
+                           <sources>
+                              <source type="metadata"/>
+                           </sources>
+                        </filter>
                         <filter type="select" filteroffoptionlabel="Any Status" createfilteroffoption="true" condition="Status">
                            <sources>
                               <source type="metadata"/>
