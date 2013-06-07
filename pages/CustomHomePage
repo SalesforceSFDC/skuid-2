@@ -65,6 +65,29 @@
             <condition type="fieldvalue" value="" enclosevalueinquotes="true" field="Status" state="filterableoff" inactive="true" name="Status"/>
          </conditions>
       </model>
+      <model id="Tasks" limit="10" query="true" createrowifnonefound="false" orderby="ActivityDate DESC" sobject="Task">
+         <fields>
+            <field id="ActivityDate"/>
+            <field id="CreatedDate"/>
+            <field id="ReminderDateTime"/>
+            <field id="Subject"/>
+            <field id="Description"/>
+            <field id="Status"/>
+            <field id="WhoId"/>
+            <field id="Who.Name"/>
+            <field id="IsClosed"/>
+            <field id="AccountId"/>
+            <field id="Account.Name"/>
+            <field id="WhatId"/>
+            <field id="What.Name"/>
+         </fields>
+         <conditions>
+            <condition type="userinfo" value="" field="OwnerId" operator="=" enclosevalueinquotes="true" userinfotype="userid"/>
+            <condition type="fieldvalue" value="" enclosevalueinquotes="true" field="Status" state="filterableoff" inactive="true" name="Status"/>
+            <condition type="fieldvalue" value="false" enclosevalueinquotes="false" field="IsClosed"/>
+            <condition type="fieldvalue" value="Completed" enclosevalueinquotes="true" field="Status" operator="!="/>
+         </conditions>
+      </model>
    </models>
    <components>
       <tabset>
@@ -173,6 +196,43 @@
                      </rowactions>
                      <massactions usefirstitemasdefault="true">
                         <action type="massupdate"/>
+                     </massactions>
+                     <views>
+                        <view type="standard"/>
+                     </views>
+                     <filters>
+                        <filter type="select" filteroffoptionlabel="Any Status" createfilteroffoption="true" condition="Status">
+                           <sources>
+                              <source type="metadata"/>
+                           </sources>
+                        </filter>
+                     </filters>
+                  </skootable>
+               </components>
+            </tab>
+            <tab name="My Tasks" icon="ui-silk-tick">
+               <components>
+                  <skootable showconditions="true" showsavecancel="true" searchmethod="server" searchbox="true" showexportbuttons="false" pagesize="10" createrecords="true" model="Tasks" mode="read">
+                     <fields>
+                        <field id="Subject"/>
+                        <field id="WhoId">
+                           <label>Contact/Lead</label>
+                        </field>
+                        <field id="WhatId">
+                           <label>Opportunity/Account</label>
+                        </field>
+                        <field id="Status"/>
+                        <field id="ActivityDate">
+                           <label>Due Date</label>
+                        </field>
+                     </fields>
+                     <rowactions>
+                        <action type="edit"/>
+                        <action type="delete"/>
+                     </rowactions>
+                     <massactions usefirstitemasdefault="true">
+                        <action type="massupdate"/>
+                        <action type="massdelete"/>
                      </massactions>
                      <views>
                         <view type="standard"/>
