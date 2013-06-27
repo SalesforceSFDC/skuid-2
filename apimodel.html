@@ -31,8 +31,12 @@ be sent in and it will be run after the update is complete.
 Creates a new row and attaches it to this model. If options.doAppend is set,
 the row will be added as the last row of the model instead of the first row.
 ##### `updateRow( row, field, value )`
-Updates the value of the data for the given row and field. This will not be
-sent to the server until the `save()` method is called.
+Updates the value of the data for the given row and field, 
+then notifies all registered Ui elements that changes took place. 
+Changes made will *not* be sent to the server until the `save()` method is called.
+##### `updateRow( row, {field1: value1, ... [, fieldN: valueN ] } )`
+Allows for making updates to multiple fields on a given row all at once,
+instead of having to make the updates one by one.
 ##### `deleteRow( row )`
 Marks the given row for deletion. This will not be sent to the server until
 the `save()` method is called.
@@ -43,6 +47,24 @@ the `save()` method is called.
 Reverts all changes made to this model since it was last saved or updated.
 ##### `save()`
 Sends all changes to this model to the server.
+##### `getConditionByName(conditionName, [searchSubConditions])`
+Searches this Model for a Condition with the requested name, 
+optionally searching sub conditions as well, and returns the Condition.
+##### `setCondition(condition,value,[affectCookies])`
+Sets the value of a Condition on the Model, where Condition is an object,
+which should be retrieved using `getConditionByName`.
+If affectCookies is explicitly set to true, and this Condition has a name,
+then a corresponding session Cookie will be created or updated with this new value.
+##### `activateCondition(condition,[affectCookies])`
+Sets the 'inactive' property on a Condition to false, where Condition is an object,
+which should be retrieved using `getConditionByName`.
+If affectCookies is explicitly set to true, and this Condition has a name,
+then a corresponding session Cookie will have its value set to '-on-'
+##### `deactivateCondition(condition,[affectCookies])`
+Sets the 'inactive' property on a Condition to true, where Condition is an object,
+which should be retrieved using `getConditionByName`.
+If affectCookies is explicitly set to true, and this Condition has a name,
+then a corresponding session Cookie will have its value set to '-off-'
 #### Examples
 
 {% highlight javascript %}
