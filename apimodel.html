@@ -21,6 +21,8 @@ By default, Skuid will return the *escaped* value of the field, unless you set `
 The benefit of using this method is that `field` can be specified as a string in relational syntax,
 e.g. 'Account.Parent.Owner.Name', and Skuid will automatically traverse the object hierarchy in that row,
 e.g. if your data row looks like this:
+
+{% highlight javascript %}
 { 
   Account: { 
      Parent: { 
@@ -36,7 +38,9 @@ e.g. if your data row looks like this:
      Name: "Main Account"
   }
 }     
-then `model.getFieldValue(row,'Account.Parent.Owner.Name')` will return 'George Bailey'.
+{% endhighlight %}
+
+then model.getFieldValue(row,'Account.Parent.Owner.Name') will return 'George Bailey'.
          
 ##### `getField( fieldName )`
 Returns a Javascript object representing a field in this model where `fieldName` 
@@ -51,11 +55,14 @@ Returns the row in this model identified by the given `id`.
 Requests an update for this model from the server. An optional callback can
 be sent in and it will be run after the update is complete.
 ##### `createRow( options )`
-Creates a new row and attaches it to this model. The following options can be provided:
+Creates a new row and attaches it to this model, returning the new row. 
+The following options can be provided:
+
  - `doAppend`: if true, then this row will be added to the end of the model.
  - `additionalConditions`: a list of Condition objects that should be applied to the new row
     in addition to any active Conditions already on the model.
-Returns the new row that was created.    
+    
+
 ##### `updateRow( row, field, value )`
 Updates the value of the data for the given row and field, 
 then notifies all registered Ui elements that changes took place. 
@@ -112,10 +119,14 @@ Sends all changes for the given array of Models to the server. Returns a [jQuery
 which will be resolved upon completion of the save operation, and any callback specified in `options.callback`. 
 To specify a callback function, provide a `callback` property of the options object. 
 The callback function will be handed a `result` object containing the following:
+
+
   - totalsuccess: a boolean that is true only if *all* requested operations succeeded, for all rows.
   - insertResults: a list of result objects for all rows that Skuid attempted to insert
   - updateResults: a list of result objects for all rows that Skuid attempted to update
   - deleteResults: a list of result objects for all rows that Skuid attempted to update  
+  
+  
 ##### `updateData( models, callback )`
 Requests an update for the given Models from the server. An optional callback
 can be sent in and it will be run after the updates are complete. Returns a [jQuery Deferred](http://api.jquery.com/category/deferred-object/).
