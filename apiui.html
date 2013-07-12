@@ -90,9 +90,13 @@ Runs the appropriate field renderer logic based on the specified data field's me
 For instance, if field.id is 'MailingCity' on the Account object, the 'TEXT' renderer will be used.
 If field.id was 'CreatedDate', then the 'DATE' renderer will be used.
 #### Overriding Field prototype methods
-Skuid Fields have one prototype method that may need to be overriden: `handleChange()`.
+Skuid Fields have one prototype method that may need to be overriden: `handleChange()`. 
+This will only be called by Skuid if the skuid.ui.Field is registered on a particular model.
+If a change is made to the skuid.ui.Field's corresponding row and field in that model, 
+then Skuid will call the skuid.ui.Field's `handleChange()` method as soon as the model has finished
+processing the change.
 
-## Properties / Methods (of skuid.ui)
+## Properties / Methods
 #### Field Rendering
 ##### `fieldRenderers`
 An object containing all of Skuid's standard renderers for each of Salesforce's Display Types. 
@@ -128,5 +132,15 @@ Some of these field renderers include multiple render methods, which can be sele
 For instance, if the MULTIPICKLIST renderer is handed field.options.type = 'CHECKBOXES', 
 then it will output a series of checkboxes for each Picklist Entry for that field.
 
+Each renderer, e.g. 'BOOLEAN', is actually an object with one to three properties, 
+corresponding to different Render Modes: 'read','edit', 'readonly' (readonly is new in Summer 13).
+So to execute a renderer on a particular field with a particular value, do something like this:
 
+{% highlight javascript %}
 
+// Assuming that uiField is a skuid.ui.Field on a Date field,
+// such as the Contact Birthdate field,
+// this will run the DATE renderer logic on that Field.
+skuid.ui.fieldRenderers.DATE.edit(uiField,'2013-07-13');
+
+{% endhighlight %}
