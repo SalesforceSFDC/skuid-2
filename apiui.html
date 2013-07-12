@@ -45,5 +45,91 @@ myeditor.handleChange = function() {
 }
 {% endhighlight %}
 
+### Field Class
+#### Constructor
+
+function Field(row,model,editor,options) {
+
+##### `new skuid.ui.Field( row, model, editor, config )`
+Instantiates a new DOM element for displaying / interacting with a particular field on a particular row
+in a particular model. The SKuid JavaScript equivalent of the `<apex:inputField>` tag. 
+
+Example:
+
+{% highlight javascript %}
+
+// Get a reference to the model and row we'll be working with
+
+var model = skuid.model.getModel('AccountData'),
+	row = model.getFirstRow();
+
+// Create a DOM element that will become our Skuid Editor
+var element = $('<div>');
+
+// Create a new Skuid UI Editor, and register it on our model
+var editor = new skuid.ui.Editor(element);
+editor.registerModel(model);
+
+// Create a new skuid.ui.Field corresponding to the 'MailingCity' field
+var f = new skuid.ui.Field(
+  row,
+  model,
+  editor,
+  {
+     fieldId: 'MailingCity',
+     register: true
+  }
+);
+// Actually render the field, running the corresponding field renderer logic
+// using the metadata Skuid finds for the 'MailingCity' field.
+f.render();
+
+{% endhighlight %}
+
+#### Prototype Methods
+##### `render()`
+Actually renders the field, creating or modifying field.element, a DOM element. 
+Runs the appropriate field renderer logic based on the specified data field's metadata.
+For instance, if field.id is 'MailingCity' on the Account object, the 'TEXT' renderer will be used.
+If field.id was 'CreatedDate', then the 'DATE' renderer will be used.
+#### Overriding Field prototype methods
+Skuid Fields have one prototype method that may need to be overriden: `handleChange()`.
+
+## Properties / Methods (of skuid.ui)
+#### Field Rendering
+##### `fieldRenderers`
+An object containing all of Skuid's standard renderers for each of Salesforce's Display Types. 
+
+The following Display Types are included in `skuid.ui.fieldRenderers`:
+
+ - BOOLEAN
+ - DATETIME
+ - DATE
+ - TEXT (handles URLs as well)
+ - TEXTAREA
+ - EMAIL
+ - CURRENCY
+ - PERCENT
+ - DOUBLE
+ - INTEGER
+ - PICKLIST
+ - MULTIPICKLIST
+ - REFERENCE: for Lookup/Master-Detail fields
+ - ID
+ 
+There are also a few other renderers that are used to handle special Skuid field rendering functionality:
+
+ - CHILDREL: for iterating over Child Relationship data and processing a per-row Template
+ - COMBO: for Template fields
+ - CUSTOM: for running a custom field renderer (defined with a Snippet)
+ - FILE: for rendering a lookup to a Skuid Image object as a File Uploader / display.
+ - REFPICK: for rendering a reference field (lookup/master-detail) as a picklist
+
+ 
+Some of these field renderers include multiple render methods, which can be selected by setting
+`field.options.type` --- which corresponds to the "Field Renderer" property in the Skuid Page Builder.
+For instance, if the MULTIPICKLIST renderer is handed field.options.type = 'CHECKBOXES', 
+then it will output a series of checkboxes for each Picklist Entry for that field.
+
 
 
