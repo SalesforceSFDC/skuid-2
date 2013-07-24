@@ -37,14 +37,7 @@
             <field id="TickerSymbol"/>
             <field id="Ownership"/>
             <field id="Site"/>
-            <field id="Active__c"/>
-            <field id="CustomerPriority__c"/>
-            <field id="NumberofLocations__c"/>
             <field id="Sic"/>
-            <field id="SLA__c"/>
-            <field id="SLAExpirationDate__c"/>
-            <field id="SLASerialNumber__c"/>
-            <field id="UpsellOpportunity__c"/>
             <field id="Id"/>
          </fields>
          <conditions>
@@ -279,22 +272,15 @@
                                     <field id="Site"/>
                                     <field id="Industry"/>
                                     <field id="NumberOfEmployees"/>
-                                    <field id="NumberofLocations__c"/>
                                     <field id="AnnualRevenue"/>
                                     <field id="Ownership"/>
                                     <field id="Sic"/>
                                     <field id="TickerSymbol"/>
-                                    <field id="SLAExpirationDate__c"/>
-                                    <field id="SLA__c"/>
-                                    <field id="SLASerialNumber__c"/>
                                  </fields>
                               </section>
                               <section title="Additional Info">
                                  <fields>
                                     <field id="Rating"/>
-                                    <field id="CustomerPriority__c"/>
-                                    <field id="Active__c"/>
-                                    <field id="UpsellOpportunity__c"/>
                                  </fields>
                               </section>
                            </sections>
