@@ -19,12 +19,6 @@
             <condition type="fieldvalue" value="" enclosevalueinquotes="true" field="Industry" state="filterableoff" inactive="true" name="Industry"/>
             <condition type="fieldvalue" value="THIS_WEEK" enclosevalueinquotes="false" field="CreatedDate" state="filterableoff" inactive="true" name="New This Week"/>
             <condition type="fieldvalue" value="LAST_WEEK" enclosevalueinquotes="false" field="CreatedDate" state="filterableoff" inactive="true" name="New Last Week"/>
-            <condition type="multiple" value="" field="SLA__c" operator="in" enclosevalueinquotes="true" state="filterableoff" inactive="true" name="Platinum and Gold SLA Customers">
-               <values>
-                  <value>Platinum</value>
-                  <value>Gold</value>
-               </values>
-            </condition>
          </conditions>
       </model>
    </models>
@@ -41,7 +35,6 @@
       <skootable showconditions="true" showsavecancel="true" searchmethod="server" searchbox="true" showexportbuttons="false" pagesize="10" createrecords="true" model="AccountData" mode="read">
          <fields>
             <field id="Name" allowordering="true"/>
-            <field id="Site" allowordering="true"/>
             <field id="BillingState" allowordering="true"/>
             <field id="Phone" allowordering="true">
                <label>Phone</label>
@@ -112,11 +105,6 @@
                <sources>
                   <source type="metadata"/>
                </sources>
-            </filter>
-            <filter type="toggle" filteroffoptionlabel="New Filter" createfilteroffoption="true" label="Platinum &amp; Gold SLA Customers">
-               <effects>
-                  <effect action="activate" value="" condition="Platinum and Gold SLA Customers"/>
-               </effects>
             </filter>
          </filters>
       </skootable>
